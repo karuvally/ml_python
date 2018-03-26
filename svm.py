@@ -1,9 +1,9 @@
 #!/usr/bin/env python2
-# The decision tree experiment
+# Trying to implement SVM
 # Copyright 2018, Aswin Babu Karuvally
 
 # get the serious stuff
-from sklearn import tree, preprocessing
+from sklearn import svm, preprocessing
 import csv
 
 # prepare the dataset
@@ -69,7 +69,7 @@ def main():
     characteristics, price = prepare_dataset("usedcars.csv")
 
     # create classifier and train
-    classifier = tree.DecisionTreeClassifier().fit(characteristics, price)
+    classifier = svm.SVC().fit(characteristics, price)
 
     # prepare the testing dataset
     test_characters, test_price = prepare_dataset("test.csv")
