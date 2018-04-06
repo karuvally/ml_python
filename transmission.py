@@ -21,7 +21,6 @@ def prepare_dataset(dataset):
         for i in range(0, len(dataset)):
             dataset[i][4] = encoded_colors[i]
 
-
     # encode model to numbers
     if dataset[0][1] != "":
         model = preprocessing.LabelEncoder()
@@ -41,21 +40,21 @@ def prepare_dataset(dataset):
         for i in range(0, len(dataset)):
             dataset[i][5] = encoded_transmissions[i]
 
-    # separate price from other values
+    # separate transmission from other values
     characteristics = []
     for i in range(0, len(dataset)):
-        characteristics.append([dataset[i][0], dataset[i][1], dataset[i][3],
-        dataset[i][4], dataset[i][5]])
+        characteristics.append([dataset[i][0], dataset[i][1], dataset[i][2],
+        dataset[i][3], dataset[i][4]])
 
-    price = [row[2] for row in dataset]
+    transmission_list = [row[5] for row in dataset]
 
     # return the prepared data
     return_dict = {
         'characteristics': characteristics,
-        'price': price,
+        'transmission': transmission_list,
         'encoded_colors': color,
         'encoded_models': model,
-        'endcoded_transmissions': transmission
+        'encoded_transmissions': transmission
         }
     return return_dict
 
@@ -86,25 +85,16 @@ def main():
 
     # create classifier and train
     classifier = neighbors.KNeighborsClassifier().fit(
-        prepared_dataset['characteristics'], prepared_dataset['price'])
-
-    # prepare the testing dataset
-    test_dataset_file = open("test.csv", "rb")
-    test_object = csv.reader(test_dataset_file)
-    test_dataset = [row for row in test_object]
-
-    prepared_test_dataset = prepare_dataset(test_dataset)
-    test_dataset_file.close()
+        prepared_dataset['characteristics'], prepared_dataset['transmission'])
 
     # do the predictions
-    predictions = classifier.predict(prepared_test_dataset['characteristics'])
-
     new_prediction = classifier.predict([[-1,
-        prepared_dataset['encoded_models'].transform(["SEL"])[0], 35000,
-        -1, -1]])
+        prepared_dataset['encoded_models'].transform(["SEL"])[0], 12998,
+        35000, -1]])
     
-    print("expected price is " + new_prediction[0])
-    
+    print(prepared_dataset['encoded_transmissions'].inverse_transform(
+        new_prediction))
+
 
 # call the main function
 main()
