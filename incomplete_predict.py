@@ -94,18 +94,17 @@ def main():
     test_dataset = [row for row in test_object]
 
     prepared_test_dataset = prepare_dataset(test_dataset)
-    print(prepared_dataset) # debug
     test_dataset_file.close()
 
     # do the predictions
     predictions = classifier.predict(prepared_test_dataset['characteristics'])
 
-    # test for accuracy
-    deviation = test_accuracy(predictions, prepared_test_dataset['price'])
-
-    # print the mean deviation
-    print("the mean deviation is " + str(deviation))
-
+    new_prediction = classifier.predict([[-1,
+        prepared_dataset['encoded_models'].transform(["SEL"])[0], 35000,
+        -1, -1]])
+    
+    print(new_prediction)
+    
 
 # call the main function
 main()
